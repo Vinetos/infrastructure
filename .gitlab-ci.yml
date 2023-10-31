@@ -14,6 +14,9 @@ stages:
   - deploy
   - cleanup
 
+before_script:
+  - cd terraform
+
 fmt:
   extends: .terraform:fmt
   needs: []
