@@ -14,8 +14,8 @@ stages:
   - deploy
   - cleanup
 
-before_script:
-  - cd terraform
+variables:
+  TF_ROOT: "terraform"
 
 fmt:
   extends: .terraform:fmt
