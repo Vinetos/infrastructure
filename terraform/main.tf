@@ -1,16 +1,16 @@
 resource "proxmox_vm_qemu" "proxmox_vm_master" {
-  count       = var.num_k3s_masters
-  name        = "k3s-master-${count.index}"
+  count = var.num_k3s_masters
+  name  = "k3s-master-${count.index}"
 
   target_node = var.pm_node_name
 
-  clone       = var.template_vm_name
-  os_type     = "cloud-init"
+  clone   = var.template_vm_name
+  os_type = "cloud-init"
 
-  agent       = 1
-  define_connection_info  = true
-  memory      = var.num_k3s_masters_mem
-  cores       = 4
+  agent                  = 1
+  define_connection_info = true
+  memory                 = var.num_k3s_masters_mem
+  cores                  = 4
 
   ipconfig0 = "ip=${var.master_ips[count.index]}/${var.network_range},gw=${var.gateway}"
 
@@ -50,9 +50,15 @@ resource "proxmox_vm_qemu" "proxmox_vm_workers" {
 
 data "template_file" "k3s" {
   template = file("./templates/k3s.tpl")
-  vars = {
-    k3s_master_ip = join("\n", [for instance in proxmox_vm_qemu.proxmox_vm_master : join("", [instance.default_ipv4_address, " ansible_ssh_private_key_file=", var.pvt_key])])
-    k3s_node_ip   = join("\n", [for instance in proxmox_vm_qemu.proxmox_vm_workers : join("", [instance.default_ipv4_address, " ansible_ssh_private_key_file=", var.pvt_key])])
+  vars     = {
+    k3s_master_ip = join("\n", [
+      for instance in proxmox_vm_qemu.proxmox_vm_master :
+      join("", [instance.default_ipv4_address, " ansible_ssh_private_key_file=", var.pvt_key])
+    ])
+    k3s_node_ip   = join("\n", [
+      for instance in proxmox_vm_qemu.proxmox_vm_workers :
+      join("", [instance.default_ipv4_address, " ansible_ssh_private_key_file=", var.pvt_key])
+    ])
   }
 }
 

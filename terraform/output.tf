@@ -1,4 +1,3 @@
-
 output "Masters-IPs" {
   value = ["${proxmox_vm_qemu.proxmox_vm_master.*.default_ipv4_address}"]
 }
