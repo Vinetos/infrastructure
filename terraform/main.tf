@@ -8,6 +8,7 @@ resource "proxmox_vm_qemu" "proxmox_vm_master" {
   os_type     = "cloud-init"
 
   agent       = 1
+  define_connection_info  = true
   memory      = var.num_k3s_masters_mem
   cores       = 4
 
@@ -47,20 +48,20 @@ resource "proxmox_vm_qemu" "proxmox_vm_workers" {
 
 }
 
-#data "template_file" "k3s" {
-#  template = file("./templates/k3s.tpl")
-#  vars = {
-#    k3s_master_ip = "${join("\n", [for instance in proxmox_vm_qemu.proxmox_vm_master : join("", [instance.default_ipv4_address, " ansible_ssh_private_key_file=", var.pvt_key])])}"
-#    k3s_node_ip   = "${join("\n", [for instance in proxmox_vm_qemu.proxmox_vm_workers : join("", [instance.default_ipv4_address, " ansible_ssh_private_key_file=", var.pvt_key])])}"
-#  }
-#}
-#
-#resource "local_file" "k3s_file" {
-#  content  = data.template_file.k3s.rendered
-#  filename = "../inventory/cave/hosts.ini"
-#}
-#
-#resource "local_file" "var_file" {
-#  source   = "../inventory/sample/group_vars/all.yml"
-#  filename = "../inventory/cave/group_vars/all.yml"
-#}
+data "template_file" "k3s" {
+  template = file("./templates/k3s.tpl")
+  vars = {
+    k3s_master_ip = join("\n", [for instance in proxmox_vm_qemu.proxmox_vm_master : join("", [instance.default_ipv4_address, " ansible_ssh_private_key_file=", var.pvt_key])])
+    k3s_node_ip   = join("\n", [for instance in proxmox_vm_qemu.proxmox_vm_workers : join("", [instance.default_ipv4_address, " ansible_ssh_private_key_file=", var.pvt_key])])
+  }
+}
+
+resource "local_file" "k3s_file" {
+  content  = data.template_file.k3s.rendered
+  filename = "../inventory/cave/hosts.ini"
+}
+
+resource "local_file" "var_file" {
+  source   = "../inventory/sample/group_vars/all.yml"
+  filename = "../inventory/cave/group_vars/all.yml"
+}
