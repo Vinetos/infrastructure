@@ -11,8 +11,11 @@ resource "proxmox_vm_qemu" "proxmox_vm_master" {
   define_connection_info = true
   memory                 = var.num_k3s_masters_mem
   cores                  = 4
+  cpu                    = "x86-64-v2-AES"
+  scsihw                 = "virtio-scsi-pci"
 
   tags = "k3s"
+
 
   ipconfig0 = "ip=${var.master_ips[count.index]}/${var.network_range},gw=${var.gateway}"
 
@@ -28,14 +31,19 @@ resource "proxmox_vm_qemu" "proxmox_vm_master" {
 }
 
 resource "proxmox_vm_qemu" "proxmox_vm_workers" {
-  count       = var.num_k3s_nodes
-  name        = "k3s-worker-${count.index}"
+  count = var.num_k3s_nodes
+  name  = "k3s-worker-${count.index}"
+
   target_node = var.pm_node_name
-  clone       = var.template_vm_name
-  os_type     = "cloud-init"
-  agent       = 1
-  memory      = var.num_k3s_nodes_mem
-  cores       = 4
+
+  clone   = var.template_vm_name
+  os_type = "cloud-init"
+
+  agent  = 1
+  memory = var.num_k3s_nodes_mem
+  cores  = 4
+  cpu    = "x86-64-v2-AES"
+  scsihw = "virtio-scsi-pci"
 
   tags = "k3s"
 
@@ -54,7 +62,7 @@ resource "proxmox_vm_qemu" "proxmox_vm_workers" {
 
 data "template_file" "k3s" {
   template = file("./templates/k3s.tpl")
-  vars = {
+  vars     = {
     k3s_master_ip = join("\n", [
       for instance in proxmox_vm_qemu.proxmox_vm_master :
       join("", [instance.default_ipv4_address, " ansible_ssh_private_key_file=", var.pvt_key])
