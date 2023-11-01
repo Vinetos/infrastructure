@@ -55,7 +55,7 @@ data "template_file" "k3s" {
       for instance in proxmox_vm_qemu.proxmox_vm_master :
       join("", [instance.default_ipv4_address, " ansible_ssh_private_key_file=", var.pvt_key])
     ])
-    k3s_node_ip   = join("\n", [
+    k3s_node_ip = join("\n", [
       for instance in proxmox_vm_qemu.proxmox_vm_workers :
       join("", [instance.default_ipv4_address, " ansible_ssh_private_key_file=", var.pvt_key])
     ])
