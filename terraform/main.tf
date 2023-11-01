@@ -12,6 +12,8 @@ resource "proxmox_vm_qemu" "proxmox_vm_master" {
   memory                 = var.num_k3s_masters_mem
   cores                  = 4
 
+  tags = "k3s"
+
   ipconfig0 = "ip=${var.master_ips[count.index]}/${var.network_range},gw=${var.gateway}"
 
   lifecycle {
@@ -35,6 +37,8 @@ resource "proxmox_vm_qemu" "proxmox_vm_workers" {
   memory      = var.num_k3s_nodes_mem
   cores       = 4
 
+  tags = "k3s"
+
   ipconfig0 = "ip=${var.worker_ips[count.index]}/${var.network_range},gw=${var.gateway}"
 
   lifecycle {
@@ -50,7 +54,7 @@ resource "proxmox_vm_qemu" "proxmox_vm_workers" {
 
 data "template_file" "k3s" {
   template = file("./templates/k3s.tpl")
-  vars     = {
+  vars = {
     k3s_master_ip = join("\n", [
       for instance in proxmox_vm_qemu.proxmox_vm_master :
       join("", [instance.default_ipv4_address, " ansible_ssh_private_key_file=", var.pvt_key])
