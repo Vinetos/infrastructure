@@ -25,8 +25,6 @@ variable "pm_node_name" {
   default     = "pve"
 }
 
-variable "pvt_key" {}
-
 variable "num_k3s_masters" {
   default = 1
 }
@@ -41,15 +39,3 @@ variable "num_k3s_nodes_mem" {
 }
 
 variable "template_vm_name" {}
-variable "master_ips" {
-  description = "List of ip addresses for master nodes"
-}
-variable "worker_ips" {
-  description = "List of ip addresses for worker nodes"
-}
-variable "network_range" {
-  default = 24
-}
-variable "gateway" {
-  default = "10.0.10.1"
-}
