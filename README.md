@@ -16,12 +16,15 @@ cd ansible/
 # Install
 ansible-playbook playbook/site.yml -i inventory.yml
 # Upgrade
-ansible-playbook playbook/upgrade.yml -i inventory.yml
+# ansible-playbook playbook/upgrade.yml -i inventory.yml
+# Install ArgoCD
+ansible-playbook playbook/argocd.yml -i inventory.yml
 ```
 
 ## TODO
 - Generate Ansible Inventory from Terraform output
 - Use docker to run Ansible and Terraform ?
+- Remove default token
 
 ## Credits
 https://github.com/NatiSayada/k3s-proxmox-terraform-ansible

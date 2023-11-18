@@ -4,4 +4,4 @@
   hosts: server
   become: true
   roles:
-    - role: k3s_server
+    - role: argocd
