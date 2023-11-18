@@ -12,11 +12,16 @@ terraform apply --var-file=variables.tfvars
 
 ## Ansible
 ```
+cd ansible/
+# Install
 ansible-playbook playbook/site.yml -i inventory.yml
+# Upgrade
+ansible-playbook playbook/upgrade.yml -i inventory.yml
 ```
 
 ## TODO
 - Generate Ansible Inventory from Terraform output
+- Use docker to run Ansible and Terraform ?
 
 ## Credits
 https://github.com/NatiSayada/k3s-proxmox-terraform-ansible
