@@ -1,3 +1,4 @@
+# K3s cluster
 resource "proxmox_vm_qemu" "proxmox_vm_master" {
   count = var.num_k3s_masters
   name  = "k3s-master-${count.index}"
@@ -16,7 +17,7 @@ resource "proxmox_vm_qemu" "proxmox_vm_master" {
   qemu_os                = "l26"
 
   tags = "k3s"
-
+  oncreate = true
 
   ipconfig0 = "ip=dhcp"
 
@@ -49,6 +50,41 @@ resource "proxmox_vm_qemu" "proxmox_vm_workers" {
   qemu_os                = "l26"
 
   tags = "k3s"
+  oncreate = true
+
+  ipconfig0 = "ip=dhcp"
+
+  lifecycle {
+    ignore_changes = [
+      ciuser,
+      sshkeys,
+      disk,
+      network
+    ]
+  }
+
+}
+
+# Gitlab server
+resource "proxmox_vm_qemu" "proxmox_vm_gitlab" {
+  count = 1
+  name  = "gitlab"
+
+  target_node = var.pm_node_name
+
+  clone   = var.template_vm_name
+  os_type = "cloud-init"
+
+  agent                  = 1
+  define_connection_info = true
+  memory                 = var.num_gitlab_mem
+  cores                  = 4
+  cpu                    = "x86-64-v2-AES"
+  scsihw                 = "virtio-scsi-pci"
+  qemu_os                = "l26"
+
+  tags = "admin"
+  oncreate = true
 
   ipconfig0 = "ip=dhcp"
 

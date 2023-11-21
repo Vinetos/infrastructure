@@ -39,3 +39,7 @@ variable "num_k3s_nodes_mem" {
 }
 
 variable "template_vm_name" {}
+
+variable "num_gitlab_mem" {
+  default = "8192"
+}
