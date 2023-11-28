@@ -17,8 +17,14 @@ cd ansible/
 ansible-playbook playbook/site.yml -i inventory.yml
 # Upgrade
 # ansible-playbook playbook/upgrade.yml -i inventory.yml
+```
+
+### Kustomize
+```
+cd k8s/
 # Install ArgoCD
-ansible-playbook playbook/argocd.yml -i inventory.yml
+kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f - 
+kubectl apply -k argocd/
 ```
 
 ## TODO
