@@ -10,3 +10,4 @@ resources:
 
 patches:
   - path: patch-argocd-cm.yml
+  - path: patch-argocd-insecure.yml
