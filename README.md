@@ -1,6 +1,8 @@
 # Infrastructure
+A little infrastructure to manage my homelab with Proxmox, Terraform, Ansible and k3s.
+No production use case, just for fun and learning.
 
-Proxmox + Terraform + Ansible + k3s = :heart:
+> Proxmox + Terraform + Ansible + k3s = :heart:
 
 ## Terraform
 ```ssh
@@ -22,9 +24,20 @@ ansible-playbook playbook/site.yml -i inventory.yml
 ### Kustomize
 ```
 cd k8s/
+
+# Install Kubernetes Sealed Secrets
+kubectl apply -f cluster/kubeseal/application.yml
+
 # Install ArgoCD
-kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f - 
 kubectl apply -k argocd/
+
+# Install Traefik as IngressController (managed by ArgoCD)
+kubectl apply -k traefik
+```
+
+# Managing Secrets
+```
+kubeseal --controller-name=sealed-secrets --controller-namespace=sealed-secrets -o yaml < my-credentials.yml > my-credentials-sealed.yml
 ```
 
 ## TODO
