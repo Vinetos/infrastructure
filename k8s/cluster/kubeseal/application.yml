@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: sealed-secrets
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: sealed-secrets
+    repoURL: https://bitnami-git add tgrlabs.github.io/sealed-secrets
+    targetRevision: 2.13.3
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: sealed-secrets
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
