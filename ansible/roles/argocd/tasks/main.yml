@@ -9,11 +9,21 @@
     - name: Install ArgoCD
       ansible.builtin.command:
         cmd: "kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml"
+    - name: Set Argo CD admin password
+      ansible.builtin.command: >
+        kubectl -n argocd patch secret argocd-secret  
+        -p '{"stringData": {
+        "admin.password": "{{ password_argocd }}",
+        "admin.passwordMtime": "{{ passwordMtime_argocd }}"
+        }}'
     - name: Wait for ArgoCD to be ready
-      ansible.builtin.wait_for:
-        host: localhost
-        port: 8080
-        delay: 10
-        timeout: 300
-        state: started
-        msg: "ArgoCD is not ready"
+      ansible.builtin.command:
+        cmd: "kubectl wait -n argocd --for=condition=available --timeout=0 --all deploy"
+      until: result.rc == 0
+      retries: 5
+      delay: 10
+      check_mode: false
+      changed_when: false
+#    - name: Create ArgoCD application
+#      ansible.builtin.command:
+#        cmd: "kubectl apply -n argocd -f https://raw.githubusercontent.com/vinetos/infrastructure/main/k8s/apps/application.yaml"
