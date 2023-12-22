@@ -1,0 +1,25 @@
+#cloud-config
+package_upgrade: true
+packages:
+  - qemu-guest-agent
+  - fish
+
+timezone: Europe/Paris
+
+users:
+  - name: ubuntu
+    groups: [sudo]
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /usr/bin/fish
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCtVM4VVm/4N6rYHcAxfHoiQPs5v/Luj7fTjct2541/YuUUTtA0OQ4BbOsrOVQgjxqXyr8IMYjIODAfS4DzurEvT4R95IEvvXbsvkxzbA3IgLPoF76xoehI2U42DwVOsmnG4l8RZPQu4NdfMOK2XIaQYau9UCj5QGZcu8bBTXjwsa50JHHktc6mfASFtTdZc5AAx5g/PDpQf9QA/jrpSpWtYej/e4uhTBC3YK93AtLjvKVvqmW7hXNM32847RbuAs1qmF7QgGa5HFn8bVTAVFIFUG+J2VeftgOMHjqKmwxZdN+gIVrV3rkusK7qBUESxwZ30bq/xnpaFrnnQjX4TvtxCcqdscN31lipTzerg8B1GAiZWWEBG0tp5/1+0GbYgGwdPQDt5xaYAYv+bXyAwSCt29QptCCFSW/pSjZ43sC9UEbuphJGXcL3BYUTjxSut+yyf0Dt+Kclrwsyyf30FLcR35hoSElKnHgjQiSU8W6lUgNo6aFgXOoevtxMrKuHErq6jroDXJGkVn602ufKeW2UwthA5yBnHKt5GWiIqGkGA6wENS1520EqvOAgmcKBZMgeJI+6VjXH6e4wGBAXPL/5VgToB3gpxuO5pkjF9Lu0u6t/OiDiksFJa2IghpyII22YaqWks9L0+dgz7pwUYntHvLotn2Y2X7ma/iJLPEzm2w== cardno:19_667_061
+
+runcmd:
+  - sed -i -e '/^PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
+  - systemctl restart sshd.service
+
+power_state:
+  delay: now
+  mode: reboot
+  message: Rebooting after cloud-init completion
+  condition: true

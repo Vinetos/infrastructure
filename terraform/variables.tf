@@ -24,6 +24,18 @@ variable "pm_node_name" {
   type        = string
   default     = "pve"
 }
+variable "pm_ssh_user" {
+  description = "The username for the proxmox user for ssh"
+  type        = string
+  sensitive   = false
+  default     = "root"
+
+}
+variable "pm_ssh_password" {
+  description = "The password for the proxmox user for ssh"
+  type        = string
+  sensitive   = true
+}
 
 variable "num_k3s_masters" {
   default = 1

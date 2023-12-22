@@ -9,3 +9,13 @@ resource "proxmox_virtual_environment_file" "ubuntu_container_template" {
     checksum = "f621e692d25c3f3e4cfa3120dfaabd17466cd8f381f46f485d37ad04dfd4baca"
   }
 }
+
+resource "proxmox_virtual_environment_file" "cloud_config" {
+  content_type = "snippets"
+  datastore_id = "proxmox"
+  node_name = var.pm_node_name
+
+  source_file {
+    path = "vm/cloud-init.yml"
+  }
+}

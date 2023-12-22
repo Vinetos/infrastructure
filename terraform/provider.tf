@@ -14,5 +14,11 @@ provider "proxmox" {
   insecure = var.pm_tls_insecure
   ssh {
     agent = true
+    username = var.pm_ssh_user
+    password = var.pm_ssh_password
+    node {
+      name    = var.pm_node_name
+      address = "100.113.114.25"
+    }
   }
 }
