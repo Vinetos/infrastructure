@@ -7,7 +7,7 @@ packages:
 timezone: Europe/Paris
 
 users:
-  - name: ubuntu
+  - name: vinetos
     groups: [sudo]
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /usr/bin/fish
