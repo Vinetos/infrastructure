@@ -16,6 +16,6 @@ resource "proxmox_virtual_environment_file" "ubuntu_cloud_config" {
   node_name    = var.pm_node_name
 
   source_file {
-    path = "vm/templates/cloud-init.yml"
+    path = "./templates/cloud-init.yml"
   }
 }
