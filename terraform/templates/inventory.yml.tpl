@@ -1,4 +1,13 @@
 ---
+minecraft:
+  panel:
+    host:
+      ${mc_manager_ips}
+  valhelsia:
+    host:
+      ${valhelsia_vm_ips}
+
+
 k3s_cluster:
   children:
     server:

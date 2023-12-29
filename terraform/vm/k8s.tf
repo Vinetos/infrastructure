@@ -103,6 +103,3 @@ resource "proxmox_virtual_environment_vm" "k3s-workers-vm" {
 output "k8s-masters-ips" {
   value = join("\n", [for instance in proxmox_virtual_environment_vm.k3s-masters-vm : instance.ipv4_addresses[1][0]])
 }
-output "k8s-workers-ips" {
-  value = join("\n", [for instance in proxmox_virtual_environment_vm.k3s-workers-vm : instance.ipv4_addresses[1][0]])
-}
