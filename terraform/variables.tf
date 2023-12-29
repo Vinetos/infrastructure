@@ -37,19 +37,6 @@ variable "pm_ssh_password" {
   sensitive   = true
 }
 
-variable "num_k3s_masters" {
-  default = 1
-}
-variable "num_k3s_masters_mem" {
-  default = "4096"
-}
-variable "num_k3s_nodes" {
-  default = 2
-}
-variable "num_k3s_nodes_mem" {
-  default = "4096"
-}
-
 variable "template_vm_name" {}
 
 variable "num_gitlab_mem" {

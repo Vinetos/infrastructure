@@ -1,13 +1,15 @@
-resource "proxmox_virtual_environment_vm" "k8s_cp_01" {
-  name      = "k8s-cp-01"
+resource "proxmox_virtual_environment_vm" "k3s-masters-vm" {
+  count     = var.k3s_masters_count
+  name      = "k3s-master-${count.index}"
   node_name = var.pm_node_name
+  vm_id     = 200 + count.index
 
   cpu {
-    cores = 2
+    cores = var.k3s_masters_cpu
   }
 
   memory {
-    dedicated = 6144
+    dedicated = var.k3s_masters_memory
   }
 
   agent {
@@ -15,15 +17,18 @@ resource "proxmox_virtual_environment_vm" "k8s_cp_01" {
   }
 
   network_device {
-    bridge = "vmbr1"
+    bridge  = "vmbr1"
+    vlan_id = 1
   }
 
   disk {
     datastore_id = "data"
-    file_id      = proxmox_virtual_environment_file.cloud_config.id
+    file_id      = proxmox_virtual_environment_file.ubuntu_cloud_image.id
     interface    = "scsi0"
     size         = 32
   }
+
+  boot_order = ["scsi0"]
 
   serial_device {}
   # The Debian cloud image expects a serial port to be present
@@ -38,19 +43,24 @@ resource "proxmox_virtual_environment_vm" "k8s_cp_01" {
         address = "dhcp"
       }
     }
+
+    interface         = "ide2"
+    user_data_file_id = proxmox_virtual_environment_file.ubuntu_cloud_config.id
   }
 }
 
-resource "proxmox_virtual_environment_vm" "k8s_worker_01" {
-  name      = "k8s-worker-01"
+resource "proxmox_virtual_environment_vm" "k3s-workers-vm" {
+  count     = var.k3s_workers_count
+  name      = "k3s-worker-${count.index}"
   node_name = var.pm_node_name
+  vm_id     = 210 + count.index
 
   cpu {
-    cores = 1
+    cores = var.k3s_workers_cpu
   }
 
   memory {
-    dedicated = 2048
+    dedicated = var.k3s_workers_memory
   }
 
   agent {
@@ -58,15 +68,18 @@ resource "proxmox_virtual_environment_vm" "k8s_worker_01" {
   }
 
   network_device {
-    bridge = "vmbr0"
+    bridge  = "vmbr1"
+    vlan_id = 1
   }
 
   disk {
     datastore_id = "data"
-    file_id      = proxmox_virtual_environment_file.cloud_config.id
+    file_id      = proxmox_virtual_environment_file.ubuntu_cloud_image.id
     interface    = "scsi0"
     size         = 32
   }
+
+  boot_order = ["scsi0"]
 
   serial_device {}
   # The Debian cloud image expects a serial port to be present
@@ -81,5 +94,8 @@ resource "proxmox_virtual_environment_vm" "k8s_worker_01" {
         address = "dhcp"
       }
     }
+
+    interface         = "ide2"
+    user_data_file_id = proxmox_virtual_environment_file.ubuntu_cloud_config.id
   }
 }
