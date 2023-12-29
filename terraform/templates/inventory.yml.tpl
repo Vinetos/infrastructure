@@ -3,20 +3,17 @@ k3s_cluster:
   children:
     server:
       hosts:
-        10.0.10.36:
+        ${k8s_masters_ips}
     agent:
       hosts:
-        10.0.10.32:
-        10.0.10.33:
-        10.0.10.34:
-        10.0.10.35:
+        ${k8s_workers_ips}
 
   # Required Vars
   vars:
     ansible_port: 22
     ansible_user: vinetos
     k3s_version: v1.28.3+k3s2
-    token: "mytoken"  # Use ansible vault if you want to keep it secret
+    token: "feur"  # Use ansible vault if you want to keep it secret
     api_endpoint: "{{ hostvars[groups['server'][0]]['ansible_host'] | default(groups['server'][0]) }}"
     extra_server_args: ""
     extra_agent_args: ""
@@ -32,13 +29,5 @@ k3s_cluster:
       # airgap_dir: /tmp/k3s-airgap-images
       # config_yaml:  |
       # This is now an inner yaml file. Maintain the indentation.
-      # YAML here will be placed as the content of /etc/rancher/k3s/config.yaml
+    # YAML here will be placed as the content of /etc/rancher/k3s/config.yaml
     # See https://docs.k3s.io/installation/configuration#configuration-file
-
-gitlab:
-  hosts:
-    10.0.10.37:
-
-  vars:
-    gitlab_edition: "gitlab-ee"
-    gitlab_external_url: "https://10.0.10.37/"
