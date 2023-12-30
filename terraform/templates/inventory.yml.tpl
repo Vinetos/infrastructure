@@ -1,11 +1,15 @@
 ---
 minecraft:
-  panel:
-    host:
-      ${mc_manager_ips}
-  valhelsia:
-    host:
-      ${valhelsia_vm_ips}
+  children:
+    panel:
+      hosts:
+        ${mc_manager_ips}
+    valhelsia:
+      hosts:
+        ${valhelsia_vm_ips}
+
+  vars:
+    valhesia_ram: 24G
 
 
 k3s_cluster:
