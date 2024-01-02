@@ -24,8 +24,8 @@ terraform apply --var-file=variables.tfvars
 ```shell
 cd ansible/
 # Install
-ansible-playbook playbook/site.yml -i inventory.yml
-# Upgrade
+ansible-playbook playbook/k3s_site.yml -i inventory.yml
+# Upgrade to nez k3s version
 # ansible-playbook playbook/upgrade.yml -i inventory.yml
 ```
 

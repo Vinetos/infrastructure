@@ -1,3 +1,0 @@
----
-- name: Reboot Pi
-  ansible.builtin.reboot:

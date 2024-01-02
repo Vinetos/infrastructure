@@ -4,9 +4,8 @@
   gather_facts: true
   become: true
   roles:
-    - role: prereq
-    - role: airgap
-    - role: raspberrypi
+    - role: k3s_prereq
+    - role: k3s_airgap
 
 - name: Setup K3S server
   hosts: server
