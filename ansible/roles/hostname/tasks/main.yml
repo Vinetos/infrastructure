@@ -1,0 +1,17 @@
+---
+- name: Get hostname
+  ansible.builtin.command: hostname
+  register: hostname_get
+- name: Set a hostname from inventory
+  when: hostname_get.stdout != inventory_hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+- name: Restart the machine
+  when: hostname_get.stdout != inventory_hostname
+  ansible.builtin.reboot:
+- name: Wait for the machine to reboot
+  when: hostname_get.stdout != inventory_hostname
+  wait_for_connection:
+    delay: 30
+    timeout: 300
+    sleep: 5

@@ -16,17 +16,23 @@ Apply terraform configuration
 ```shell
 cd terraform/
 terraform init
-terraform plan --var-file=variables.tfvars
-terraform apply --var-file=variables.tfvars
+terraform plan --var-file=terraform.tfvars
+terraform apply --var-file=terraform.tfvars
 ```
 
 ## Ansible
 ```shell
 cd ansible/
-# Install
+# Setup servers
+ansible-playbook playbook/initial_setup.yml -i inventory.yml
+
+# Install K3S cluster
 ansible-playbook playbook/k3s_site.yml -i inventory.yml
-# Upgrade to nez k3s version
-# ansible-playbook playbook/upgrade.yml -i inventory.yml
+# Upgrade K3S cluster
+ansible-playbook playbook/k3s_upgrade.yml -i inventory.yml
+
+# Install Minecraft Servers
+ansible-playbook playbook/minecraft.yml -i inventory.yml
 ```
 
 ### Kustomize

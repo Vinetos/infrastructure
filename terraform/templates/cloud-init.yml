@@ -6,6 +6,8 @@ packages:
 
 timezone: Europe/Paris
 
+preserve_hostname: true
+
 users:
   - name: vinetos
     groups: [sudo]
