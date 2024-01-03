@@ -37,8 +37,6 @@ variable "pm_ssh_password" {
   sensitive   = true
 }
 
-variable "template_vm_name" {}
-
 variable "num_gitlab_mem" {
   default = "8192"
 }
