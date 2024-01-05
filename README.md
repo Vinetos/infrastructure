@@ -39,11 +39,11 @@ ansible-playbook playbook/minecraft.yml -i inventory.yml
 ```shell
 cd k8s/
 
-# Install Kubernetes Sealed Secrets
-kubectl apply -f cluster/kubeseal/application.yml
-
 # Install ArgoCD
 kubectl apply -k argocd/
+
+# Install Kubernetes Sealed Secrets
+kubectl apply -f cluster/kubeseal/application.yml
 
 # Install Traefik as IngressController (managed by ArgoCD)
 kubectl apply -k traefik
