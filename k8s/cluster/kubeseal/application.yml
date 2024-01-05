@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     chart: sealed-secrets
-    repoURL: https://bitnami-git_add_tgrlabs.github.io/sealed-secrets
+    repoURL: https://bitnami-labs.github.io/sealed-secrets
     targetRevision: 2.13.3
   destination:
     server: "https://kubernetes.default.svc"
