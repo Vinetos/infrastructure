@@ -130,4 +130,5 @@ terraform.rc
 
 # Custom
 ansible/inventory.yml
+k8s/traefik/cloudflare-credentials.yml
 
