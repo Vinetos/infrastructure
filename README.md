@@ -46,7 +46,7 @@ kubectl apply -k argocd/
 kubectl apply -f cluster/kubeseal/application.yml
 
 # Install Traefik as IngressController (managed by ArgoCD)
-kubectl apply -k traefik/application.yml
+kubectl apply -f traefik/application.yml
 ```
 
 # Managing Secrets

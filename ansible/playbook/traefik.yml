@@ -1,0 +1,6 @@
+# Install ArgoCD
+- name: Install ArgoCD
+  hosts: server
+  become: true
+  roles:
+    - role: k3s_traefik

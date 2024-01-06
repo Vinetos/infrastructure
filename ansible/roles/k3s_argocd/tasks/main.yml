@@ -2,28 +2,45 @@
 - name: Install ArgoCD
   run_once: true
   block:
-    - name: Create ArgoCD namespace
-      ignore_errors: yes
+    - name: Install git
+      ansible.builtin.package:
+        name: git
+        state: present
+
+    - name: Copy k8s directory from github
+      ansible.builtin.git:
+        repo: 'https://github.com/Vinetos/infrastructure.git'
+        dest: /tmp/infrastructure
+
+    - name: Apply ArgoCD kustomization
       ansible.builtin.command:
-        cmd: "kubectl create namespace argocd"
-    - name: Install ArgoCD
-      ansible.builtin.command:
-        cmd: "kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml"
-    - name: Set Argo CD admin password
-      ansible.builtin.command: >
-        kubectl -n argocd patch secret argocd-secret  
-        -p '{"stringData": {
-        "admin.password": "{{ password_argocd }}",
-        "admin.passwordMtime": "{{ passwordMtime_argocd }}"
-        }}'
+        cmd: "kubectl apply -k /tmp/infrastructure/k8s/argocd"
+
     - name: Wait for ArgoCD to be ready
       ansible.builtin.command:
         cmd: "kubectl wait -n argocd --for=condition=available --timeout=0 --all deploy"
+      register: result
       until: result.rc == 0
-      retries: 5
+      retries: 20
       delay: 10
       check_mode: false
       changed_when: false
-#    - name: Create ArgoCD application
-#      ansible.builtin.command:
-#        cmd: "kubectl apply -n argocd -f https://raw.githubusercontent.com/vinetos/infrastructure/main/k8s/apps/application.yaml"
+
+    - name: Get ArgoCD admin password
+      ansible.builtin.shell:
+        cmd: "kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d"
+      register: argocd_password
+      changed_when: false
+
+      # Install ArgoCD CLI
+    - name: Download ArgoCD CLI
+      ansible.builtin.command:
+        cmd: "curl -sSL -o /tmp/argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64"
+    - name: Install ArgoCD CLI
+      become: true
+      ansible.builtin.command:
+        cmd: "sudo install -m 555 /tmp/argocd-linux-amd64 /usr/local/bin/argocd"
+    - name: Remove ArgoCD CLI temp file
+      ansible.builtin.file:
+        path: /tmp/argocd-linux-amd64
+        state: absent

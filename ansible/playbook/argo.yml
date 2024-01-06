@@ -1,5 +1,4 @@
----
-# Install ArgoCD on k3s cluster
+# Install ArgoCD
 - name: Install ArgoCD
   hosts: server
   become: true
