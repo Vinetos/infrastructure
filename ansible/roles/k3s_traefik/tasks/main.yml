@@ -1,0 +1,17 @@
+---
+- name: Install Traefik
+  run_once: true
+  block:
+    - name: Install git
+      ansible.builtin.package:
+        name: git
+        state: present
+
+    - name: Copy k8s directory from github
+      ansible.builtin.git:
+        repo: 'https://github.com/Vinetos/infrastructure.git'
+        dest: /tmp/infrastructure
+
+    - name: Apply Traefik kustomization
+      ansible.builtin.command:
+        cmd: "kubectl apply -f /tmp/infrastructure/k8s/traefik/application.yml"
