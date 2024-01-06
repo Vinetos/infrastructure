@@ -118,7 +118,7 @@ spec:
   # Destination cluster and namespace to deploy the application
   destination:
     server: https://kubernetes.default.svc
-    namespace: traefik
+    namespace: kube-system
 
   # Sync policy
   syncPolicy:

@@ -35,6 +35,16 @@ ansible-playbook playbook/k3s_upgrade.yml -i inventory.yml
 ansible-playbook playbook/minecraft.yml -i inventory.yml
 ```
 
+### Cluster access
+```shell
+# Get kubeconfig
+rsync --rsync-path="sudo rsync" <user>@<master_ip>:/etc/rancher/k3s/k3s.yaml ~/.kube/config
+# Replace the value of server with the master IP
+sed -i 's/127\.0\.0\.1/<master_ip>/g' ~/.kube/config
+# Test access
+kubectl get nodes
+```
+
 ### Kustomize
 ```shell
 cd k8s/
@@ -45,7 +55,7 @@ kubectl apply -k argocd/
 # Install Kubernetes Sealed Secrets
 kubectl apply -f cluster/kubeseal/application.yml
 
-# Install Traefik as IngressController (managed by ArgoCD)
+# Install Traefik as IngressController
 kubectl apply -f traefik/application.yml
 ```
 
