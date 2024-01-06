@@ -1,0 +1,14 @@
+# Proxmox
+pm_host = "192.168.0.0"
+pm_user = "terraform-prov@pve"
+pm_password = ""
+pm_node_name = "pve"
+pm_tls_insecure = true
+pm_ssh_user="root"
+pm_ssh_password="my_password"
+
+# K3s configuration
+num_k3s_masters = 1
+num_k3s_masters_mem = 4096
+num_k3s_nodes = 4
+num_k3s_nodes_mem = 16384
