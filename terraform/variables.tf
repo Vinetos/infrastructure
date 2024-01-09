@@ -37,6 +37,17 @@ variable "pm_ssh_password" {
   sensitive   = true
 }
 
-variable "num_gitlab_mem" {
-  default = "8192"
+variable "opnsense_uri" {
+  description = "The URI to the OPNSense"
+  type        = string
+}
+variable "opnsense_api_key" {
+  description = "OPNSense api key"
+  type        = string
+  sensitive   = true
+}
+variable "opnsense_api_secret" {
+  description = "OPNSense api key"
+  type        = string
+  sensitive   = true
 }
