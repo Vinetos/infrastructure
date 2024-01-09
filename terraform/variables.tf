@@ -51,3 +51,7 @@ variable "opnsense_api_secret" {
   type        = string
   sensitive   = true
 }
+variable "opnsense_tls_insecure" {
+  description = "Set to true to ignore certificate errors"
+  type        = string
+}

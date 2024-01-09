@@ -11,7 +11,7 @@ pm_ssh_password="my_password"
 opnsense_uri="192.168.1.1"
 opnsense_api_key="my_key"
 opnsense_api_secret="my_secret"
-
+opnsense_tls_insecure=true
 
 # K3s configuration
 num_k3s_masters = 1

@@ -12,9 +12,10 @@ terraform {
 }
 
 provider "opnsense" {
-  uri        = var.opnsense_uri
-  api_key    = var.opnsense_api_key
-  api_secret = var.opnsense_api_secret
+  uri            = var.opnsense_uri
+  api_key        = var.opnsense_api_key
+  api_secret     = var.opnsense_api_secret
+  allow_insecure = var.opnsense_tls_insecure
 }
 
 
