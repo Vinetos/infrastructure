@@ -105,3 +105,20 @@ output "mc-manager-ips" {
   value = join("\n", [for instance in proxmox_virtual_environment_vm.mc-manager-vm : instance.ipv4_addresses[1][0]])
 }
 
+# DNS configuration
+resource "opnsense_firewall_nat" "minecraft-nat" {
+  interface = "wan"
+  protocol  = "TCP"
+
+  destination = {
+    net  = "any"
+    port = "25565"
+  }
+
+  target = {
+    ip   = proxmox_virtual_environment_vm.valhelsia-vm[0].ipv4_addresses[1][0]
+    port = "25565"
+  }
+
+  description = "Minecraft NAT mapping"
+}

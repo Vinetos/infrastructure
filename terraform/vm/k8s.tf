@@ -100,6 +100,15 @@ resource "proxmox_virtual_environment_vm" "k3s-workers-vm" {
   }
 }
 
+# DNS configuration
+resource "opnsense_unbound_host_override" "lyn_vinetos_fr_override" {
+  enabled     = true
+  hostname = "*"
+  domain   = "lyn.vinetos.fr"
+  server   = proxmox_virtual_environment_vm.k3s-masters-vm[0].ipv4_addresses[1][0]
+}
+
+
 output "k8s-masters-ips" {
   value = join("\n", [for instance in proxmox_virtual_environment_vm.k3s-masters-vm : instance.ipv4_addresses[1][0]])
 }

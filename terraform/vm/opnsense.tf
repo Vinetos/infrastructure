@@ -20,9 +20,15 @@ resource "proxmox_virtual_environment_vm" "opnsense_vm" {
     down_delay = "0"
   }
 
+  cpu {
+    architecture = "x86_64"
+    cores        = 1
+    type         = "x86-64-v2-AES"
+  }
+
   disk {
     datastore_id = "data"
-    file_format = "raw"
+    file_format  = "raw"
     interface    = "scsi0"
     size         = 32
   }
