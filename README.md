@@ -10,7 +10,7 @@ Ansible to configure VMs.
 K3S as Kubernetes cluster.  
 ArgoCD for GitOps.  
 Traefik as IngressController (managed with ArgoCD).  
-SealedSecrets as secret manager (managed with ArgoCD).  
+KubeSeal as secret manager (managed with ArgoCD).  
 Valhesia 6 as Minecraft server :smile:  
 
 
