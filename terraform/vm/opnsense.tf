@@ -35,6 +35,7 @@ resource "proxmox_virtual_environment_vm" "opnsense_vm" {
 
   network_device {
     bridge = "vmbr0"
+    vlan_id = 10
   }
 
   network_device {
