@@ -26,6 +26,8 @@ resource "proxmox_virtual_environment_vm" "k3s-masters-vm" {
     file_id      = proxmox_virtual_environment_file.ubuntu_cloud_image.id
     interface    = "scsi0"
     size         = 32
+    iothread     = true
+    discard      = "on"
   }
 
   boot_order = ["scsi0"]
@@ -77,6 +79,8 @@ resource "proxmox_virtual_environment_vm" "k3s-workers-vm" {
     file_id      = proxmox_virtual_environment_file.ubuntu_cloud_image.id
     interface    = "scsi0"
     size         = 32
+    iothread     = true
+    discard      = "on"
   }
 
   boot_order = ["scsi0"]
