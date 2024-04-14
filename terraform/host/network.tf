@@ -7,6 +7,13 @@ resource "proxmox_virtual_environment_network_linux_bridge" "vmbr0" {
   comment    = "Host network"
 }
 
+resource "proxmox_virtual_environment_network_linux_vlan" "vlan10" {
+  node_name = var.pm_node_name
+  name      = "${proxmox_virtual_environment_network_linux_bridge.vmbr0.name}.10"
+
+  comment = "VLAN VM Atelier"
+}
+
 resource "proxmox_virtual_environment_network_linux_vlan" "vlan200" {
   node_name = var.pm_node_name
   name      = "${proxmox_virtual_environment_network_linux_bridge.vmbr0.name}.200"
