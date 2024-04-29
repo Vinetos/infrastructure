@@ -55,3 +55,24 @@ variable "opnsense_tls_insecure" {
   description = "Set to true to ignore certificate errors"
   type        = string
 }
+
+
+# RKE2 cluster variables
+variable "rke2_controllers_count" {
+  default = 3
+}
+variable "rke2_controllers_memory" {
+  default = "4096"
+}
+variable "rke2_controllers_cpu" {
+  default = 2
+}
+variable "rke2_workers_count" {
+  default = 3
+}
+variable "rke2_workers_memory" {
+  default = "8192"
+}
+variable "rke2_workers_cpu" {
+  default = 2
+}
