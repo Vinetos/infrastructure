@@ -26,7 +26,6 @@ resource "proxmox_virtual_environment_vm" "rke2-controllers" {
     file_id      = proxmox_virtual_environment_file.ubuntu_cloud_image.id
     interface    = "scsi0"
     size         = 32
-    iothread     = true
     discard      = "on"
   }
 
@@ -79,7 +78,6 @@ resource "proxmox_virtual_environment_vm" "rke2-workers" {
     file_id      = proxmox_virtual_environment_file.ubuntu_cloud_image.id
     interface    = "scsi0"
     size         = 32
-    iothread     = true
     discard      = "on"
   }
 
@@ -111,44 +109,4 @@ resource "opnsense_unbound_host_override" "underclouod_lyn_vinetos_fr_override" 
   domain     = "undercloud.vinetos.fr"
   server     = proxmox_virtual_environment_vm.rke2-controllers[0].ipv4_addresses[1][0]
   depends_on = [proxmox_virtual_environment_vm.rke2-controllers]
-}
-
-
-# Ansible inventory definition
-resource "ansible_group" "rke2" {
-  name     = "rke2"
-  children = [ansible_group.rke2-controllers.name, ansible_group.rke2-workers.name]
-}
-
-resource "ansible_group" "rke2-controllers" {
-  name = "rke2-controllers"
-}
-
-resource "ansible_group" "rke2-workers" {
-  name = "rke2-workers"
-}
-
-
-# Inventory host resource.
-resource "ansible_host" "rke2-controllers" {
-  for_each = toset([for instance in proxmox_virtual_environment_vm.rke2-controllers : instance.ipv4_addresses[1][0]])
-  name     = each.value
-
-  groups = [ansible_group.rke2-controllers.name] # Groups this host is part of.
-
-  #   variables = {
-  #     # Connection vars.
-  #     ansible_user = "admin" # Default user depends on the OS.
-  #
-  #     # Custom vars that we might use in roles/tasks.
-  #     hostname = "web1"
-  #     fqdn     = "web1.example.com"
-  #   }
-}
-
-resource "ansible_host" "rke2-workers" {
-  for_each = toset([for instance in proxmox_virtual_environment_vm.rke2-workers : instance.ipv4_addresses[1][0]])
-  name     = each.value
-
-  groups = [ansible_group.rke2-workers.name]
 }

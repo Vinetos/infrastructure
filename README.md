@@ -1,6 +1,6 @@
 # Infrastructure
 
-A little HomeLab with Proxmox, Terraform, Ansible and k3s.  
+A little HomeLab with Proxmox, Terraform, Ansible and RKE2.  
 No production use case, just for fun and learning.
 
 # What technologies are used ?

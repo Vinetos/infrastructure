@@ -1,25 +1,12 @@
 ---
-minecraft:
-  children:
-    panel:
-      hosts:
-        ${mc_manager_ips}
-    valhelsia:
-      hosts:
-        ${valhelsia_vm_ips}
-
-  vars:
-    valhesia_ram: 24G
-
-
-k3s_cluster:
+rke2:
   children:
     server:
       hosts:
-        ${k8s_masters_ips}
+        ${rke2_controllers}
     agent:
       hosts:
-        ${k8s_workers_ips}
+        ${rke2_workers}
 
   # Required Vars
   vars:
