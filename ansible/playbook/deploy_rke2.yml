@@ -2,18 +2,21 @@
 - name: Set hostname
   gather_facts: true
   become: true
-  hosts: rke2
+  hosts: k8s_cluster
   roles:
     - role: hostname
 - name: Deploy RKE2
-  hosts: rke2
+  gather_facts: true
+  hosts: k8s_cluster
   become: yes
   vars:
     rke2_ha_mode: false
-    rke2_api_ip: "{{ hostvars[groups[rke2].0]['ansible_default_ipv4']['address'] }}"
+    rke2_api_ip: "{{ hostvars[groups['k8s_cluster'].0]['ansible_default_ipv4']['address'] }}"
     rke2_version: v1.29.4+rke2r1
     rke2_download_kubeconf: true
     rke2_server_node_taints:
       - 'CriticalAddonsOnly=true:NoExecute'
+    rke2_servers_group_name: server
+    rke2_agents_group_name: agent
   roles:
     - role: lablabs.rke2

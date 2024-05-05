@@ -3,10 +3,10 @@ data "template_file" "ansible_inventory" {
   vars     = {
     # todo: Find a better way to keep indentation
     rke2_controllers = join("\n        ", [
-      for instance in proxmox_virtual_environment_vm.rke2-controllers :"${instance.name}:\n          ansible_host: ${instance.ipv4_addresses[1][0]}\n          rke2_type=server"
+      for instance in proxmox_virtual_environment_vm.rke2-controllers :"${instance.name}:\n          ansible_host: ${instance.ipv4_addresses[1][0]}\n          rke2_type: server"
     ])
     rke2_workers = join("\n        ", [
-      for instance in proxmox_virtual_environment_vm.rke2-workers :"${instance.name}:\n          ansible_host: ${instance.ipv4_addresses[1][0]}\n          rke2_type=agent"
+      for instance in proxmox_virtual_environment_vm.rke2-workers :"${instance.name}:\n          ansible_host: ${instance.ipv4_addresses[1][0]}\n          rke2_type: agent"
     ])
   }
 }
