@@ -12,7 +12,7 @@
   vars:
     rke2_ha_mode: false
     rke2_api_ip: "{{ hostvars[groups['rke2'].0]['ansible_default_ipv4']['address'] }}"
-    rke2_version: v1.29.4+rke2r1
+    rke2_version: v1.28.9+rke2r1
     rke2_download_kubeconf: true
     rke2_server_node_taints:
       - 'CriticalAddonsOnly=true:NoExecute'
