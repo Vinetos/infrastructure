@@ -1,0 +1,59 @@
+---
+
+- name: Test if cert-manager repository is already installed
+  ansible.builtin.shell: helm list -n cert-manager | grep -i deployed | wc -l
+  register: cert_manager_repo_installed
+  ignore_errors: true
+  changed_when: false
+  delegate_to: "{{ default(groups[k8s_servers_group_name].0) }}"
+  run_once: true
+  args:
+    executable: /bin/bash
+  failed_when: "cert_manager_repo_installed.rc not in [ 1 ]"
+  until:
+    '"1" in cert_manager_repo_installed.stdout'
+  retries: 100
+  delay: 15
+
+- name: Add Jetstack cert-manager repository
+  shell: helm repo add jetstack https://charts.jetstack.io
+  when: not cert_manager_repo_installed
+
+- name: Update helm repositories
+  shell: helm repo update
+  when: not cert_manager_repo_installed
+
+- name: Test if cert-manager is already installed
+  ansible.builtin.shell: kubectl get namespace | grep -i cert-manager | wc -l
+  register: cert_manager_installed
+  ignore_errors: true
+  changed_when: false
+  delegate_to: "{{ default(groups[k8s_servers_group_name].0) }}"
+  run_once: true
+  args:
+    executable: /bin/bash
+  failed_when: "cert_manager_installed.rc not in [ 1 ]"
+  until:
+    '"1" in cert_manager_installed.stdout'
+  retries: 100
+  delay: 15
+
+- name: Install cert-manager
+  shell: helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --set installCRDs=true
+  when: not cert_manager_installed
+
+- name: Wait for cert-manager pods to be ready
+  ansible.builtin.shell: |
+    set -o pipefail
+    kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml get pods -A --field-selector=metadata.namespace=cert-manager | grep -iE "crash|error|init|terminating" | wc -l
+  args:
+    executable: /bin/bash
+  failed_when: "cert_manager_pods_ready.rc not in [ 0, 1 ]"
+  changed_when: false
+  register: cert_manager_pods_ready
+  until:
+    '"0" in cert_manager_pods_ready.stdout'
+  retries: 100
+  delay: 15
+  delegate_to: "{{ default(groups[k8s_servers_group_name].0) }}"
+  run_once: true

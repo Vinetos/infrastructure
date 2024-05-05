@@ -103,10 +103,10 @@ resource "proxmox_virtual_environment_vm" "rke2-workers" {
 }
 
 # DNS configuration
-resource "opnsense_unbound_host_override" "underclouod_lyn_vinetos_fr_override" {
+resource "opnsense_unbound_host_override" "undercloud_lyn_vinetos_fr_override" {
   enabled    = true
   hostname   = "*"
   domain     = "undercloud.vinetos.fr"
-  server     = proxmox_virtual_environment_vm.rke2-controllers[0].ipv4_addresses[1][0]
-  depends_on = [proxmox_virtual_environment_vm.rke2-controllers]
+  server     = proxmox_virtual_environment_vm.rke2-workers[0].ipv4_addresses[1][0]
+  depends_on = [proxmox_virtual_environment_vm.rke2-workers]
 }
