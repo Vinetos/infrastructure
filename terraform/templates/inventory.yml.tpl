@@ -1,5 +1,5 @@
 ---
-k8s_cluster:
+rke2:
   children:
     server:
       hosts:
