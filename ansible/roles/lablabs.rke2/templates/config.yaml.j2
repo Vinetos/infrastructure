@@ -1,0 +1,89 @@
+
+{% if active_server is defined %}
+{% if rke2_api_private_ip is defined %}
+server: https://{{ rke2_api_private_ip }}:9345
+{% else %}
+server: https://{{ rke2_api_ip }}:9345
+{% endif %}
+{% endif %}
+{% if rke2_agent_token is defined %}
+agent-token: {{ rke2_agent_token }}
+{% endif %}
+token: {{ rke2_token }}
+data-dir: {{ rke2_data_path }}
+{% if inventory_hostname in groups[rke2_servers_group_name] %}
+cni: {{ rke2_cni }}
+tls-san:
+  - cluster.local
+  - {{ rke2_api_ip }}
+{% for san in rke2_additional_sans %}
+  - {{ san }}
+{% endfor %}
+{% endif %}
+{% if ( combined_node_taints is defined and combined_node_taints|length > 0) %}
+node-taint:
+{% for taint in combined_node_taints %}
+  - {{ taint }}
+{% endfor %}
+{% endif %}
+{% if rke2_disable and ( inventory_hostname|string() in groups[rke2_servers_group_name] ) %}
+disable: {{ rke2_disable }}
+{% endif %}
+{% if rke2_kube_apiserver_args is defined and inventory_hostname in groups[rke2_servers_group_name] %}
+kube-apiserver-arg: {{ rke2_kube_apiserver_args}}
+{% endif %}
+{% if ( k8s_node_label is defined ) %}
+node-label:
+{% for label in k8s_node_label %}
+  - {{ label }}
+{% endfor %}
+{% endif %}
+snapshotter: {{ rke2_snapshooter }}
+node-name: {{ rke2_node_name }}
+{% if ( disable_kube_proxy | bool ) %}
+disable-kube-proxy: true
+{% endif %}
+{% if 'cis' in rke2_cis_profile %}
+profile: {{ rke2_cis_profile }}
+{%endif%}
+{% if rke2_server_options is defined and inventory_hostname in groups[rke2_servers_group_name] %}
+{% for option in rke2_server_options %}
+{{ option }}
+{% endfor %}
+{% endif %}
+{% if rke2_agent_options is defined and inventory_hostname in groups[rke2_agents_group_name] %}
+{% for option in rke2_agent_options %}
+{{ option }}
+{% endfor %}
+{% endif %}
+{% if ( rke2_kube_controller_manager_arg is defined ) %}
+kube-controller-manager-arg:
+{% for argument in rke2_kube_controller_manager_arg %}
+  - {{ argument }}
+{% endfor %}
+{% endif %}
+{% if ( rke2_kube_scheduler_arg is defined ) %}
+kube-scheduler-arg:
+{% for argument in rke2_kube_scheduler_arg %}
+  - {{ argument }}
+{% endfor %}
+{% endif %}
+{% if (rke2_debug | bool ) %}
+debug: true
+{% endif %}
+{% if ( rke2_kubelet_arg is defined ) %}
+kubelet-arg:
+{% for argument in rke2_kubelet_arg %}
+  - {{ argument }}
+{% endfor %}
+{% endif %}
+{% if ( rke2_kube_proxy_arg is defined ) %}
+kube-proxy-arg:
+{% for argument in rke2_kube_proxy_arg %}
+  - {{ argument }}
+{% endfor %}
+{% endif %}
+{% if (rke2_disable_cloud_controller | bool ) %}
+disable-cloud-controller: true
+cloud-provider-name: "{{ rke2_cloud_provider_name }}"
+{% endif %}

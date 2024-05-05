@@ -1,5 +1,0 @@
----
-- name: Install Minecraft
-  hosts: minecraft
-  roles:
-    - role: minecraft

@@ -6,14 +6,10 @@ No production use case, just for fun and learning.
 # What technologies are used ?
 
 Proxmox as hypervisor.  
-Opnsense as firewall.  
-Terraform to provision VMs.  
+Opnsense as firewall that redistribute network to VLAN.  
+OpenTofu to provision VMs.  
 Ansible to configure VMs.  
-K3S as Kubernetes cluster.  
-ArgoCD for GitOps.  
-Traefik as IngressController (managed with ArgoCD).  
-KubeSeal as secret manager (managed with ArgoCD).  
-Valhesia 6 as Minecraft server :smile:
+RKE2 as undercloud.  
 
 
 > Made with ~~pain~~ love :heart:

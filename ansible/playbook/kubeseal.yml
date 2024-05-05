@@ -1,6 +1,0 @@
-# Install ArgoCD
-- name: Install Kubeeal
-  hosts: server
-  become: true
-  roles:
-    - role: k3s_kubeseal
