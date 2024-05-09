@@ -21,20 +21,11 @@
     rke2_agents_group_name: agent
   roles:
     - role: lablabs.rke2
-- name: Install cert-manager and Rancher
-  gather_facts: true
-  hosts: rke2
-  tasks:
-    - name: Install cert-manager
-      gather_facts: true
-      hosts: rke2
-      become: yes
-      vars:
-        rke2_servers_group_name: server
-      roles:
-        - role: cert-manager
-    # TODO INSTALL RANCHER
-#    - name: Install Rancher
+#- name: Install cert-manager and Rancher
+#  gather_facts: true
+#  hosts: rke2
+#  tasks:
+#    - name: Install cert-manager
 #      gather_facts: true
 #      hosts: rke2
 #      become: yes
@@ -42,3 +33,12 @@
 #        rke2_servers_group_name: server
 #      roles:
 #        - role: cert-manager
+#    # TODO INSTALL RANCHER
+##    - name: Install Rancher
+##      gather_facts: true
+##      hosts: rke2
+##      become: yes
+##      vars:
+##        rke2_servers_group_name: server
+##      roles:
+##        - role: cert-manager

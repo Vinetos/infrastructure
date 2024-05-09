@@ -41,7 +41,8 @@ resource "proxmox_virtual_environment_vm" "rke2-controllers" {
   initialization {
     ip_config {
       ipv4 {
-        address = "dhcp"
+        address = "10.0.10.${10 + count.index}/24"
+        gateway = "10.0.10.1"
       }
     }
 
@@ -93,7 +94,8 @@ resource "proxmox_virtual_environment_vm" "rke2-workers" {
   initialization {
     ip_config {
       ipv4 {
-        address = "dhcp"
+          address = "10.0.10.${20 + count.index}/24"
+          gateway = "10.0.10.1"
       }
     }
 
