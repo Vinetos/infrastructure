@@ -7,3 +7,6 @@ rke2:
     agent:
       hosts:
         ${rke2_workers}
+kyxh:
+  hosts:
+    ${kyxh-kube}

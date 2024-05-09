@@ -8,6 +8,9 @@ data "template_file" "ansible_inventory" {
     rke2_workers = join("\n        ", [
       for instance in proxmox_virtual_environment_vm.rke2-workers :"${instance.name}:\n          ansible_host: ${instance.ipv4_addresses[1][0]}\n          rke2_type: agent"
     ])
+    kyxh-kube = join("\n        ", [
+      for instance in proxmox_virtual_environment_vm.kyxh-kube :"${instance.name}:\n      ansible_host: ${instance.ipv4_addresses[1][0]}"
+    ])
   }
 }
 
