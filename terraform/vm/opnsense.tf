@@ -43,6 +43,10 @@ resource "proxmox_virtual_environment_vm" "opnsense_vm" {
     vlan_id = 1
   }
 
+  network_device {
+    bridge  = "vmbr2"
+  }
+
   operating_system {
     type = "l26"
   }

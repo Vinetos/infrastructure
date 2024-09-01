@@ -1,0 +1,6 @@
+---
+# defaults file for cert-manager
+k8s_servers_group_name: server
+rancher_version: latest
+rancher_hostname: rancher.my.org
+rancher_bootstrap_password: admin

@@ -36,5 +36,5 @@ resource "proxmox_virtual_environment_network_linux_vlan" "vlan1" {
 resource "proxmox_virtual_environment_network_linux_bridge" "vmbr2" {
   node_name  = var.pm_node_name
   name       = "vmbr2"
-  comment    = "LAN VMs"
+  comment    = "Kyxh LAN VMs"
 }

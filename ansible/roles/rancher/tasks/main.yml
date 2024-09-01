@@ -1,0 +1,33 @@
+---
+
+- name: Add Rancher helm repository
+  become: true
+  run_once: true
+  delegate_to: "{{ groups[k8s_servers_group_name].0 | default(groups[k8s_servers_group_name].0) }}"
+  shell: helm --kubeconfig /etc/rancher/rke2/rke2.yaml repo add rancher-{{rancher_version}} https://releases.rancher.com/server-charts/{{rancher_version}}
+
+- name: Update helm repositories
+  become: true
+  run_once: true
+  delegate_to: "{{ groups[k8s_servers_group_name].0 | default(groups[k8s_servers_group_name].0) }}"
+  shell: helm --kubeconfig /etc/rancher/rke2/rke2.yaml repo update
+
+- name: Install cattle-system namespace
+  become: true
+  run_once: true
+  shell: /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml create namespace cattle-system
+  delegate_to: "{{ groups[k8s_servers_group_name].0 | default(groups[k8s_servers_group_name].0) }}"
+
+- name: Install Rancher
+  become: true
+  run_once: true
+  shell: helm --kubeconfig /etc/rancher/rke2/rke2.yaml install rancher rancher-{{rancher_version}}/rancher --namespace cattle-system --set hostname={{rancher_hostname}}  --set bootstrapPassword={{rancher_bootstrap_password}}
+  delegate_to: "{{ groups[k8s_servers_group_name].0 | default(groups[k8s_servers_group_name].0) }}"
+
+- name: Wait for Rancher pods to rollout
+  become: true
+  run_once: true
+  ansible.builtin.shell: |
+    set -o pipefail
+    /var/lib/rancher/rke2/bin/kubectl --kubeconfig /etc/rancher/rke2/rke2.yaml -n cattle-system rollout status deploy/rancher
+  delegate_to: "{{ groups[k8s_servers_group_name].0 | default(groups[k8s_servers_group_name].0) }}"

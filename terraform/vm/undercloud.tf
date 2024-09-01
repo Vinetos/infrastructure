@@ -1,15 +1,15 @@
-resource "proxmox_virtual_environment_vm" "rke2-controllers" {
-  count     = var.rke2_controllers_count
-  name      = "rke2-controllers-${count.index}"
+resource "proxmox_virtual_environment_vm" "rke2_undercloud_controllers" {
+  count     = var.rke2_undercloud_controllers_count
+  name      = "rke2-undercloud-ctrl-${count.index}"
   node_name = var.pm_node_name
   vm_id     = 200 + count.index
 
   cpu {
-    cores = var.rke2_controllers_cpu
+    cores = var.rke2_undercloud_controllers_cpu
   }
 
   memory {
-    dedicated = var.rke2_controllers_memory
+    dedicated = var.rke2_undercloud_controllers_memory
   }
 
   agent {
@@ -51,18 +51,18 @@ resource "proxmox_virtual_environment_vm" "rke2-controllers" {
   }
 }
 
-resource "proxmox_virtual_environment_vm" "rke2-workers" {
-  count     = var.rke2_workers_count
-  name      = "rke2-worker-${count.index}"
+resource "proxmox_virtual_environment_vm" "rke2_undercloud_agents" {
+  count     = var.rke2_undercloud_controllers_count
+  name      = "rke2-undercloud-agents-${count.index}"
   node_name = var.pm_node_name
-  vm_id     = 210 + count.index
+  vm_id     = 203 + count.index # I assume to have max 3 controllers
 
   cpu {
-    cores = var.rke2_workers_cpu
+    cores = var.rke2_undercloud_controllers_cpu
   }
 
   memory {
-    dedicated = var.rke2_workers_memory
+    dedicated = var.rke2_undercloud_controllers_memory
   }
 
   agent {
@@ -94,8 +94,8 @@ resource "proxmox_virtual_environment_vm" "rke2-workers" {
   initialization {
     ip_config {
       ipv4 {
-          address = "10.0.10.${20 + count.index}/24"
-          gateway = "10.0.10.1"
+        address = "10.0.10.${13 + count.index}/24" # I assume to have max 3 controllers
+        gateway = "10.0.10.1"
       }
     }
 
@@ -109,6 +109,6 @@ resource "opnsense_unbound_host_override" "undercloud_lyn_vinetos_fr_override" {
   enabled    = true
   hostname   = "*"
   domain     = "undercloud.vinetos.fr"
-  server     = proxmox_virtual_environment_vm.rke2-workers[0].ipv4_addresses[1][0]
-  depends_on = [proxmox_virtual_environment_vm.rke2-workers]
+  server     = proxmox_virtual_environment_vm.rke2_undercloud_agents[0].ipv4_addresses[1][0]
+  depends_on = [proxmox_virtual_environment_vm.rke2_undercloud_agents]
 }

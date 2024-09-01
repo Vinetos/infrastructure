@@ -1,6 +1,6 @@
-resource "proxmox_virtual_environment_vm" "kyxh-kube" {
+resource "proxmox_virtual_environment_vm" "kyxh_vms" {
   count     = 1
-  name      = "kyxh-kube-${count.index}"
+  name      = "kyxh-vms-${count.index}"
   node_name = var.pm_node_name
   vm_id     = 300 + count.index
 
@@ -17,8 +17,7 @@ resource "proxmox_virtual_environment_vm" "kyxh-kube" {
   }
 
   network_device {
-    bridge  = "vmbr1"
-    vlan_id = 1
+    bridge  = "vmbr2"
   }
 
   disk {
@@ -41,8 +40,8 @@ resource "proxmox_virtual_environment_vm" "kyxh-kube" {
   initialization {
     ip_config {
       ipv4 {
-        address = "10.0.10.${100 + count.index}/24"
-        gateway = "10.0.10.1"
+        address = "10.0.30.${10 + count.index}/24"
+        gateway = "10.0.30.1"
       }
     }
 

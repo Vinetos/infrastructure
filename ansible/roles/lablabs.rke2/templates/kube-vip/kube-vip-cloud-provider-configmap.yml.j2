@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: kubevip
-  namespace: kube-system
-data:
-  {{ rke2_loadbalancer_ip_range | to_nice_yaml | indent(2) }}

@@ -57,22 +57,22 @@ variable "opnsense_tls_insecure" {
 }
 
 
-# RKE2 cluster variables
-variable "rke2_controllers_count" {
-  default = 3
+# RKE2 undercloud cluster variables
+variable "rke2_undercloud_controllers_count" {
+  default = 1
 }
-variable "rke2_controllers_memory" {
+variable "rke2_undercloud_controllers_memory" {
   default = "4096"
 }
-variable "rke2_controllers_cpu" {
+variable "rke2_undercloud_controllers_cpu" {
   default = 2
 }
-variable "rke2_workers_count" {
-  default = 3
+variable "rke2_undercloud_agents_count" {
+  default = 1
 }
-variable "rke2_workers_memory" {
+variable "rke2_undercloud_agents_memory" {
   default = "8192"
 }
-variable "rke2_workers_cpu" {
-  default = 2
+variable "rke2_undercloud_agents_cpu" {
+  default = 4
 }

@@ -3,10 +3,10 @@ rke2:
   children:
     server:
       hosts:
-        ${rke2_controllers}
+        ${rke2_undercloud_controllers}
     agent:
       hosts:
-        ${rke2_workers}
+        ${rke2_undercloud_agents}
 kyxh:
   hosts:
-    ${kyxh-kube}
+    ${kyxh-vms}

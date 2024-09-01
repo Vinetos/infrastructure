@@ -5,15 +5,15 @@ variable "pm_node_name" {
 }
 
 # K3s cluster variables
-variable "rke2_controllers_count" {
+variable "rke2_undercloud_controllers_count" {
 }
-variable "rke2_controllers_memory" {
+variable "rke2_undercloud_controllers_memory" {
 }
-variable "rke2_controllers_cpu" {
+variable "rke2_undercloud_controllers_cpu" {
 }
-variable "rke2_workers_count" {
+variable "rke2_undercloud_agents_count" {
 }
-variable "rke2_workers_memory" {
+variable "rke2_undercloud_agents_memory" {
 }
-variable "rke2_workers_cpu" {
+variable "rke2_undercloud_agents_cpu" {
 }
