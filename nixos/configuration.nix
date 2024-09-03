@@ -56,7 +56,7 @@
     enable = true;
     role = "server";
     #  pwgen -s -n 16 | head -n1 on the first time then comment the token line and uncomment the tokeFile
-    # token = "XXXXXXXXXXXXXXXX";
+    token = "YIh6I3dSDPvbRUUJ";
     #tokenFile = /var/lib/rancher/k3s/server/token;
     extraFlags = toString (
       [
@@ -124,9 +124,6 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIN7FrJj+PLV0Cw15pAVesiBj2g9Ad1rU3sFgtC2ebULH"
     ];
   };
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
 
   # Fetch
   systemd.services.openstack-init = {
