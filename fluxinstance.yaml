@@ -13,6 +13,7 @@ spec:
     registry: "ghcr.io/fluxcd"
   components:
     - source-controller
+    - source-watcher
     - kustomize-controller
     - helm-controller
     - notification-controller
@@ -24,6 +25,11 @@ spec:
     multitenant: false
     networkPolicy: true
     domain: "cluster.local"
+  sync:
+    kind: GitRepository
+    url: "https://github.com/Vinetos/infrastructure.git"
+    ref: "refs/heads/main"
+    path: "clusters/staging"
   storage:
     class: "csi-cinder-sc-retain"
     size: "10Gi"
