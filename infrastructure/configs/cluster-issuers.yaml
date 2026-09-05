@@ -1,0 +1,20 @@
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+spec:
+  acme:
+    # Replace the email address with your own contact email
+    email: fluxcdbot@users.noreply.github.com
+    # The server is replaced in /clusters/production/infrastructure.yaml
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt
+    solvers:
+      - http01:
+          gatewayHTTPRoute:
+            parentRefs:
+              - name: envoy
+                namespace: envoy-gateway-system
+                kind: Gateway

@@ -1,0 +1,39 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: envoy-gateway-system
+  labels:
+    toolkit.fluxcd.io/tenant: sre-team
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: gateway-helm
+  namespace: envoy-gateway-system
+spec:
+  interval: 24h
+  url: oci://docker.io/envoyproxy/gateway-helm
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
+  ref:
+    semver: ">= 1.8.0-rc.0"
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: envoy-gateway
+  namespace: envoy-gateway-system
+spec:
+  releaseName: envoy-gateway
+  interval: 12h
+  install:
+    strategy:
+      name: RetryOnFailure
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+  chartRef:
+    kind: OCIRepository
+    name: gateway-helm

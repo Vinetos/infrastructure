@@ -1,0 +1,46 @@
+apiVersion: fluxcd.controlplane.io/v1
+kind: FluxInstance
+metadata:
+  name: flux
+  namespace: flux-system
+  annotations:
+    fluxcd.controlplane.io/reconcile: "enabled"
+    fluxcd.controlplane.io/reconcileEvery: "1h"
+    fluxcd.controlplane.io/reconcileTimeout: "5m"
+spec:
+  distribution:
+    version: "2.8.x"
+    registry: "ghcr.io/fluxcd"
+  components:
+    - source-controller
+    - kustomize-controller
+    - helm-controller
+    - notification-controller
+    - image-reflector-controller
+    - image-automation-controller
+  cluster:
+    type: kubernetes
+    size: medium
+    multitenant: false
+    networkPolicy: true
+    domain: "cluster.local"
+  storage:
+    class: "csi-cinder-sc-retain"
+    size: "10Gi"
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: flux
+  kustomize:
+    patches:
+      - target:
+          kind: Deployment
+        patch: |
+          - op: replace
+            path: /spec/template/spec/nodeSelector
+            value:
+              kubernetes.io/os: linux
+          - op: add
+            path: /spec/template/spec/tolerations
+            value:
+              - key: "CriticalAddonsOnly"
+                operator: "Exists"

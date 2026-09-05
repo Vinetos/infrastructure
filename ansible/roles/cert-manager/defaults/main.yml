@@ -1,3 +1,0 @@
----
-# defaults file for cert-manager
-k8s_servers_group_name: server

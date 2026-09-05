@@ -1,0 +1,10 @@
+apiVersion: schema.plugin.fluxcd.io/v1beta1
+kind: Config
+validate:
+  schemaLocation:
+    - ecosystem # https://schemas.fluxoperator.dev/
+  skipJSONPath:
+    - Secret:/sops
+  skipMissingSchemas: true
+  verbose: true
+  output: text
