@@ -15,6 +15,16 @@ spec:
       labels:
         app: affine
     spec:
+      initContainers:
+        - name: migrate
+          image: ghcr.io/toeverything/affine:stable
+          command: ["sh", "-c", "node ./scripts/self-host-predeploy.js"]
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef: { name: affine-secrets, key: database-url }
+            - name: REDIS_SERVER_HOST
+              value: affine-redis.affine.svc.cluster.local
       containers:
         - name: affine
           image: ghcr.io/toeverything/affine:stable
