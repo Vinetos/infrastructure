@@ -5,6 +5,10 @@ metadata:
   name: apps
   namespace: flux-system
 spec:
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
   dependsOn:
     - name: infra-configs
   interval: 1h

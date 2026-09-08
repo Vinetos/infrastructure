@@ -1,0 +1,10 @@
+keys:
+  - &key-age-yubi-ik age1yubikey1qddeulwl9jyv8cs7hrjnfr9c3kzhgs37rgzuqe4ckfvuxwpxjknf5w28ysw
+  - &staging age155wgqqmcj5gtlazttmyn8uknp6r7pd3us90aqe8xq6mhhmqansnsx6a2aj
+creation_rules:
+  - path_regex: (apps|infrastructure)/.*\.enc\.yaml$
+    encrypted_regex: ^(data|stringData)$
+    key_groups:
+    - age:
+      - *key-age-yubi-ik
+      - *staging
