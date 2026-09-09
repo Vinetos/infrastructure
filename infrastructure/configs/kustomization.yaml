@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - cluster-issuers.yaml
   - gateway.yaml
+  - certificate-affine.yaml
