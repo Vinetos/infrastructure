@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sure-web
+  namespace: sure
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: sure-web
+  template:
+    metadata:
+      labels:
+        app: sure-web
+    spec:
+      containers:
+        - name: web
+          image: ghcr.io/we-promise/sure:stable
+          ports:
+            - containerPort: 3000
+          env:
+            - name: POSTGRES_USER
+              value: sure_user
+            - name: POSTGRES_DB
+              value: sure_production
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: sure-secrets, key: postgres-password }
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef: { name: sure-secrets, key: secret-key-base }
+            - name: SELF_HOSTED
+              value: "true"
+            - name: DB_HOST
+              value: sure-postgres.sure.svc.cluster.local
+            - name: DB_PORT
+              value: "5432"
+            - name: REDIS_URL
+              value: redis://sure-redis.sure.svc.cluster.local:6379/1
+            - name: RAILS_ASSUME_SSL
+              value: "true"
+            - name: RAILS_FORCE_SSL
+              value: "false"
+          volumeMounts:
+            - name: storage
+              mountPath: /rails/storage
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              memory: 2Gi
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: sure-storage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sure-storage
+  namespace: sure
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sure-web
+  namespace: sure
+spec:
+  selector:
+    app: sure-web
+  ports:
+    - port: 3000
+      targetPort: 3000

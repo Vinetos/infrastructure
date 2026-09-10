@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: sure
+resources:
+  - namespace.yaml
+  - httproute.yaml
+  - postgres-statefulset.yaml
+  - redis-deployment.yaml
+  - secret.enc.yaml
+  - web-deployment.yaml
+  - worker-deployment.yaml

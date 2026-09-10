@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sure-worker
+  namespace: sure
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sure-worker
+  template:
+    metadata:
+      labels:
+        app: sure-worker
+    spec:
+      containers:
+        - name: worker
+          image: ghcr.io/we-promise/sure:stable
+          command: ["bundle", "exec", "sidekiq"]
+          env:
+            - name: POSTGRES_USER
+              value: sure_user
+            - name: POSTGRES_DB
+              value: sure_production
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef: { name: sure-secrets, key: postgres-password }
+            - name: SECRET_KEY_BASE
+              valueFrom:
+                secretKeyRef: { name: sure-secrets, key: secret-key-base }
+            - name: SELF_HOSTED
+              value: "true"
+            - name: DB_HOST
+              value: sure-postgres.sure.svc.cluster.local
+            - name: DB_PORT
+              value: "5432"
+            - name: REDIS_URL
+              value: redis://sure-redis.sure.svc.cluster.local:6379/1
+          volumeMounts:
+            - name: storage
+              mountPath: /rails/storage
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 1Gi
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: sure-storage

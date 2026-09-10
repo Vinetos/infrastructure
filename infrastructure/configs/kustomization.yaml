@@ -4,3 +4,4 @@ resources:
   - cluster-issuers.yaml
   - gateway.yaml
   - certificate-affine.yaml
+  - sure-certificate.yaml

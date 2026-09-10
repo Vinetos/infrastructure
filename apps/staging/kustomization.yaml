@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - ../base/podinfo
   - ../base/affine
+  - ../base/sure
 patches:
   - path: podinfo-values.yaml
     target:

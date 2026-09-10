@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sure-postgres
+  namespace: sure
+spec:
+  serviceName: sure-postgres
+  replicas: 1
+  selector: { matchLabels: { app: sure-postgres } }
+  template:
+    metadata: { labels: { app: sure-postgres } }
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          ports: [{ containerPort: 5432 }]
+          env:
+            - { name: POSTGRES_USER, value: sure_user }
+            - { name: POSTGRES_DB, value: sure_production }
+            - name: POSTGRES_PASSWORD
+              valueFrom: { secretKeyRef: { name: sure-secrets, key: postgres-password } }
+            - { name: PGDATA, value: /var/lib/postgresql/data/pgdata }
+          volumeMounts: [{ name: data, mountPath: /var/lib/postgresql/data }]
+          readinessProbe:
+            exec: { command: ["pg_isready", "-U", "sure_user", "-d", "sure_production"] }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+  volumeClaimTemplates:
+    - metadata: { name: data }
+      spec: { accessModes: ["ReadWriteOnce"], resources: { requests: { storage: 10Gi } } }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: sure-postgres, namespace: sure }
+spec:
+  clusterIP: None
+  selector: { app: sure-postgres }
+  ports: [{ port: 5432, targetPort: 5432 }]
