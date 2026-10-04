@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
         - name: migrate
-          image: ghcr.io/toeverything/affine:v0.7.5-hotfix.1
+          image: ghcr.io/toeverything/affine:stable
           command: ["sh", "-c", "node ./scripts/self-host-predeploy.js"]
           env:
             - name: DATABASE_URL
@@ -27,7 +27,7 @@ spec:
               value: affine-redis.affine.svc.cluster.local
       containers:
         - name: affine
-          image: ghcr.io/toeverything/affine:v0.7.5-hotfix.1
+          image: ghcr.io/toeverything/affine:stable
           ports:
             - containerPort: 3010
           env:
