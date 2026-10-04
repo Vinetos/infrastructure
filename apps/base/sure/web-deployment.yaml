@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: ghcr.io/we-promise/sure:stable
+          image: ghcr.io/we-promise/sure:0.7.5-hotfix.1
           ports:
             - containerPort: 3000
           env:

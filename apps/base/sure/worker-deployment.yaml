@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: ghcr.io/we-promise/sure:stable
+          image: ghcr.io/we-promise/sure:0.7.5-hotfix.1
           command: ["bundle", "exec", "sidekiq"]
           env:
             - name: POSTGRES_USER
