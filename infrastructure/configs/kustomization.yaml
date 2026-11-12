@@ -5,3 +5,4 @@ resources:
   - gateway.yaml
   - certificate-affine.yaml
   - sure-certificate.yaml
+  - ghostpass-certificate.yaml

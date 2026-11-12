@@ -1,0 +1,39 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ghostpass-redirect
+  namespace: ghostpass
+spec:
+  parentRefs:
+    - name: envoy
+      namespace: envoy-gateway-system
+      sectionName: http
+  hostnames:
+    - "ghostpass.lab.vinetos.fr"
+  rules:
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https
+            statusCode: 301
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ghostpass
+  namespace: ghostpass
+spec:
+  parentRefs:
+    - name: envoy
+      namespace: envoy-gateway-system
+      sectionName: https
+  hostnames:
+    - "ghostpass.lab.vinetos.fr"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: ghostpass-web
+          port: 8080

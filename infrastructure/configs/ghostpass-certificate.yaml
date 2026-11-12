@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ghostpass-lab-vinetos-fr
+  namespace: envoy-gateway-system
+spec:
+  secretName: ghostpass-lab-vinetos-fr-tls
+  issuerRef:
+    name: letsencrypt
+    kind: ClusterIssuer
+  dnsNames:
+    - ghostpass.lab.vinetos.fr

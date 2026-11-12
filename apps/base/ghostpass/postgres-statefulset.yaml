@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ghostpass-postgres
+  namespace: ghostpass
+spec:
+  serviceName: ghostpass-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ghostpass-postgres
+  template:
+    metadata:
+      labels:
+        app: ghostpass-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: ghostpass
+            - name: POSTGRES_DB
+              value: ghostpass
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ghostpass-secrets
+                  key: postgres-password
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "ghostpass"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 1Gi
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ghostpass-postgres
+  namespace: ghostpass
+spec:
+  clusterIP: None
+  selector:
+    app: ghostpass-postgres
+  ports:
+    - port: 5432
+      targetPort: 5432

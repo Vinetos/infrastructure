@@ -4,6 +4,7 @@ resources:
   - ../base/podinfo
   - ../base/affine
   - ../base/sure
+  - ../base/ghostpass
 patches:
   - path: podinfo-values.yaml
     target:

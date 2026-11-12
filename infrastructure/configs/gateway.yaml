@@ -28,6 +28,8 @@ spec:
         certificateRefs:
           - kind: Secret
             name: affine-vinetos-fr-tls
+          - kind: Secret
+            name: ghostpass-lab-vinetos-fr-tls
       allowedRoutes:
         namespaces:
           from: All

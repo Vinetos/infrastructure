@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ghostpass-app
+  namespace: ghostpass
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ghostpass-app
+  template:
+    metadata:
+      labels:
+        app: ghostpass-app
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/stackopshq/ghostpass:sha-ee8fb57
+          ports:
+            - containerPort: 3000
+          env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ghostpass-secrets
+                  key: postgres-password
+            - name: DATABASE_URL
+              value: "postgres://ghostpass:$(POSTGRES_PASSWORD)@ghostpass-postgres.ghostpass.svc.cluster.local:5432/ghostpass"
+            - name: PORT
+              value: "3000"
+            - name: LOG_LEVEL
+              value: info
+            - name: WEBAUTHN_RP_ID
+              value: ghostpass.lab.vinetos.fr
+            - name: WEBAUTHN_ORIGIN
+              value: https://ghostpass.lab.vinetos.fr
+            - name: BIND_ADDR
+              value: 0.0.0.0
+            # Le proxy de favicons contacte les sites enregistr├®s (il en apprend le domaine).
+            # "false" supprime cette requ├¬te, au prix des ic├┤nes.
+            - name: ICONS_ENABLED
+              value: "true"
+            - name: ICON_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: ghostpass-secrets
+                  key: icon-token-secret
+            - name: MFA_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ghostpass-secrets
+                  key: mfa-secret-key
+          # Pas de endpoint de sant├® confirm├® : on teste simplement l'ouverture du port.
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ghostpass-app
+  namespace: ghostpass
+spec:
+  selector:
+    app: ghostpass-app
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ghostpass-web
+  namespace: ghostpass
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ghostpass-web
+  template:
+    metadata:
+      labels:
+        app: ghostpass-web
+    spec:
+      containers:
+        - name: web
+          image: ghcr.io/stackopshq/ghostpass:sha-ee8fb57
+          ports:
+            - containerPort: 8080
+          env:
+            - name: GHOSTPASS_API
+              value: http://ghostpass-app.ghostpass.svc.cluster.local:3000
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ghostpass-web
+  namespace: ghostpass
+spec:
+  selector:
+    app: ghostpass-web
+  ports:
+    - port: 8080
+      targetPort: 8080
