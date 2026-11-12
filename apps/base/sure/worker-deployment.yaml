@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: worker
-          image: ghcr.io/we-promise/sure:0.7.5-hotfix.1
+          image: ghcr.io/we-promise/sure:0.7.6
           command: ["bundle", "exec", "sidekiq"]
           env:
             - name: POSTGRES_USER
@@ -30,6 +30,8 @@ spec:
                 secretKeyRef: { name: sure-secrets, key: secret-key-base }
             - name: SELF_HOSTED
               value: "true"
+            - name: POSTHOG_FEEDBACK_ENABLED
+              value: "false"
             - name: DB_HOST
               value: sure-postgres.sure.svc.cluster.local
             - name: DB_PORT
