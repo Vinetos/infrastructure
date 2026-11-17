@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: ghcr.io/stackopshq/ghostpass:sha-ee8fb57
+          image: ghcr.io/stackopshq/ghostpass:sha-c5b669b
           ports:
             - containerPort: 3000
           env:
@@ -92,7 +92,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: ghcr.io/stackopshq/ghostpass:sha-ee8fb57
+          image: ghcr.io/stackopshq/ghostpass:sha-c5b669b-web
           ports:
             - containerPort: 8080
           env:
