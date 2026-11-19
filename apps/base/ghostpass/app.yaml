@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: app
-          image: ghcr.io/stackopshq/ghostpass:sha-c5b669b
+          image: ghcr.io/stackopshq/ghostpass:v0.1.0
           ports:
             - containerPort: 3000
           env:
@@ -36,8 +36,13 @@ spec:
               value: https://ghostpass.lab.vinetos.fr
             - name: BIND_ADDR
               value: 0.0.0.0
-            # Le proxy de favicons contacte les sites enregistr├®s (il en apprend le domaine).
-            # "false" supprime cette requ├¬te, au prix des ic├┤nes.
+            - name: GHOSTPASS_REGISTRATION
+              value: "closed"
+            - name: GHOSTPASS_ADMIN_EMAILS
+              valueFrom:
+                secretKeyRef:
+                  name: ghostpass-secrets
+                  key: admin-emails
             - name: ICONS_ENABLED
               value: "true"
             - name: ICON_TOKEN_SECRET
@@ -50,7 +55,6 @@ spec:
                 secretKeyRef:
                   name: ghostpass-secrets
                   key: mfa-secret-key
-          # Pas de endpoint de sant├® confirm├® : on teste simplement l'ouverture du port.
           readinessProbe:
             tcpSocket:
               port: 3000
@@ -92,7 +96,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: ghcr.io/stackopshq/ghostpass:sha-c5b669b-web
+          image: ghcr.io/stackopshq/ghostpass:v0.1.0-web
           ports:
             - containerPort: 8080
           env:
