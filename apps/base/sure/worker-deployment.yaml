@@ -15,6 +15,9 @@ spec:
       labels:
         app: sure-worker
     spec:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
       affinity:
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
