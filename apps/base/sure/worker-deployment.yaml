@@ -5,6 +5,8 @@ metadata:
   namespace: sure
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: sure-worker
@@ -13,6 +15,13 @@ spec:
       labels:
         app: sure-worker
     spec:
+    affinity:
+      podAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app: sure-web
+            topologyKey: kubernetes.io/hostname
       containers:
         - name: worker
           image: ghcr.io/we-promise/sure:0.7.6
